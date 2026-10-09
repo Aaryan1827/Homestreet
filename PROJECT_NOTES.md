@@ -138,4 +138,10 @@ To add a new city:
 
 ---
 
-*Last updated: Stage 3 — Safe vs fast routes*
+*Last updated: Stage 3 — Report page: city news and traffic warnings*
+
+### News and Traffic Warnings
+- Fetches Google News RSS feeds across 4 parallel queries.
+- Falls back to sample mock data if RSS fails (or is blocked by CORS).
+- Caches data in localStorage for 20 minutes.
+- Auto-detects corridors and affected areas from headlines and generates severity-based warnings.

@@ -14,6 +14,8 @@ import CarouselControls from '../components/CarouselControls'
 import TimeSlider from '../components/TimeSlider'
 import { useTime } from '../context/TimeContext'
 import { activeIncidents } from '../utils/safety'
+import { fetchCityNews, detectWarning } from '../utils/news'
+import { useState, useEffect } from 'react'
 
 function TasteOfPune({ dishes }) {
   const scrollRef = useRef(null)
@@ -99,6 +101,42 @@ function SafetyPulse({ city, hour }) {
   )
 }
 
+function TrafficAlerts({ city, navigate }) {
+  const [warnings, setWarnings] = useState([])
+  
+  useEffect(() => {
+    fetchCityNews(city, false).then(data => {
+      const w = data.map(a => ({...a, warning: detectWarning(a, city)})).filter(a => a.warning);
+      setWarnings(w.slice(0, 3));
+    }).catch(() => {})
+  }, [city])
+
+  if (warnings.length === 0) return null;
+
+  return (
+    <motion.section {...FADE_UP(0.11)} className="flex flex-col gap-3 cursor-pointer" onClick={() => navigate('/report')}>
+      <div className="flex items-center gap-2 px-1 text-orange-600 dark:text-orange-400">
+        <ShieldAlert size={18} />
+        <h2 className="text-sm font-bold uppercase tracking-wider">Traffic & Road Alerts</h2>
+      </div>
+      <div className="flex flex-col gap-2">
+        {warnings.map((w, i) => (
+          <GlassCard key={i} className="p-3 border-l-4 bg-orange-500/5 hover:bg-orange-500/10 transition-colors" style={{ borderLeftColor: w.warning.severity === 'high' ? '#EF4444' : w.warning.severity === 'medium' ? '#F59E0B' : '#EAB308' }}>
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex-1 min-w-0">
+                 <p className="text-xs font-bold line-clamp-2" style={{ color: 'var(--color-ink)' }}>{w.title}</p>
+                 <p className="text-[10px] font-semibold uppercase mt-1 tracking-wider" style={{ color: w.warning.severity === 'high' ? '#EF4444' : w.warning.severity === 'medium' ? '#F59E0B' : '#EAB308' }}>
+                   AFFECTED AREA: {w.warning.areas.length > 0 ? w.warning.areas.join(', ') : city.name} ({w.warning.issue})
+                 </p>
+              </div>
+            </div>
+          </GlassCard>
+        ))}
+      </div>
+    </motion.section>
+  )
+}
+
 export default function Home() {
   const { city } = useCity()
   const { theme } = useTheme()
@@ -152,6 +190,9 @@ export default function Home() {
         <motion.div {...FADE_UP(0.10)}>
           <SafetyPulse city={city} hour={hour} />
         </motion.div>
+
+        {/* Traffic Alerts */}
+        <TrafficAlerts city={city} navigate={navigate} />
 
         {/* Heritage Carousel */}
         <motion.div {...FADE_UP(0.12)}>

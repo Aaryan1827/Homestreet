@@ -23,7 +23,11 @@ export default [
         clearInterval: "readonly",
         setInterval: "readonly",
         setTimeout: "readonly",
-        clearTimeout: "readonly"
+        clearTimeout: "readonly",
+        URLSearchParams: "readonly",
+        DOMParser: "readonly",
+        fetch: "readonly",
+        Promise: "readonly"
       },
     },
     rules: {

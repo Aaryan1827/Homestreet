@@ -20,6 +20,35 @@ const pune = {
     { name: 'Peth Area', lat: 18.5168, lng: 73.8553, scores: { safety: 75, cleanliness: 55, affordability: 90, rating: 88, accessibility: 65 } },
     { name: 'Hinjewadi', lat: 18.5913, lng: 73.7389, scores: { safety: 82, cleanliness: 80, affordability: 60, rating: 75, accessibility: 70 } },
   ],
+  corridors: [
+    { name: 'PCMC to Pune Road', aliases: ['Pimpri Chinchwad', 'PCMC', 'Old Mumbai-Pune Highway', 'Nashik Phata'], lat: 18.62, lng: 73.81 },
+    { name: 'Mumbai-Pune Expressway', aliases: ['Expressway'], lat: 18.73, lng: 73.68 },
+    { name: 'Katraj-Kondhwa Road', aliases: ['Katraj', 'Kondhwa'], lat: 18.45, lng: 73.87 },
+    { name: 'Sinhagad Road', aliases: ['Sinhagad'], lat: 18.47, lng: 73.82 },
+    { name: 'Baner-Pashan Road', aliases: ['Baner', 'Pashan'], lat: 18.54, lng: 73.79 },
+    { name: 'Hinjewadi Phase 1/2/3', aliases: ['Hinjewadi', 'Phase 1', 'Phase 2', 'Phase 3'], lat: 18.59, lng: 73.73 },
+    { name: 'University Road', aliases: ['Pune University', 'SPPU'], lat: 18.53, lng: 73.82 },
+    { name: 'FC Road', aliases: ['Fergusson College Road'], lat: 18.52, lng: 73.84 },
+    { name: 'JM Road', aliases: ['Jangali Maharaj Road'], lat: 18.525, lng: 73.845 },
+    { name: 'Satara Road', aliases: ['Pune-Satara Road', 'Swargate'], lat: 18.48, lng: 73.85 },
+    { name: 'Nagar Road', aliases: ['Pune-Nagar Road', 'Ahmednagar Road'], lat: 18.55, lng: 73.91 },
+    { name: 'Solapur Road', aliases: ['Pune-Solapur Road'], lat: 18.50, lng: 73.92 },
+    { name: 'Pune-Bengaluru Highway', aliases: ['Chandani Chowk', 'Bypass', 'NH48'], lat: 18.50, lng: 73.77 },
+    { name: 'Kharadi-Hadapsar', aliases: ['Kharadi', 'Magarpatta'], lat: 18.53, lng: 73.93 },
+    { name: 'Laxmi Road', aliases: ['Laxmi Road'], lat: 18.51, lng: 73.85 }
+  ],
+  news: [
+    { title: "Heavy traffic jam reported near Chandani Chowk due to ongoing construction work", summary: "Commuters are facing delays of up to 45 minutes on the Pune-Bengaluru Highway...", source: "Pune Mirror", pubDate: new Date().toISOString() },
+    { title: "Waterlogging at PMC area after sudden heavy showers", summary: "Several low lying areas including parts of JM Road and FC Road are experiencing slow traffic movement.", source: "Times of India", pubDate: new Date(Date.now() - 3600000).toISOString() },
+    { title: "Metro work diverts traffic on Baner Road", summary: "Barricading for the new metro pillar has caused a major bottleneck.", source: "Indian Express", pubDate: new Date(Date.now() - 7200000).toISOString() },
+    { title: "Pothole menace: Commuters complain about damaged road at Katraj-Kondhwa", summary: "Recent rains have exposed the poor quality of patch work done last month.", source: "Sakal", pubDate: new Date(Date.now() - 86400000).toISOString() },
+    { title: "Weekend procession to cause diversions in Peth Areas", summary: "Traffic police have advised citizens to avoid Laxmi Road this Sunday evening.", source: "Hindustan Times", pubDate: new Date(Date.now() - 172800000).toISOString() },
+    { title: "Major accident on Mumbai-Pune Expressway, lanes blocked", summary: "A collision involving three vehicles has brought traffic to a standstill near Lonavala.", source: "News18", pubDate: new Date(Date.now() - 4000000).toISOString() },
+    { title: "Tree fall disrupts power and traffic in Koregaon Park", summary: "Fire brigade officials are on the spot to clear the debris.", source: "Pune Mirror", pubDate: new Date(Date.now() - 5000000).toISOString() },
+    { title: "VIP movement to affect University Road tomorrow", summary: "Avoid University circle between 10 AM and 12 PM due to scheduled VIP visit.", source: "Times of India", pubDate: new Date(Date.now() - 9000000).toISOString() },
+    { title: "Civic body starts repairing potholes on Solapur Road", summary: "Residents had staged a minor protest earlier demanding immediate repairs.", source: "Sakal", pubDate: new Date(Date.now() - 9500000).toISOString() },
+    { title: "Smooth traffic flow reported on Old Mumbai-Pune Highway today", summary: "No major congestion observed during peak morning hours.", source: "Indian Express", pubDate: new Date(Date.now() - 10000000).toISOString() }
+  ],
   culture: {
     festivals: [
       { name: 'Ganeshotsav', month: 'August/September', description: 'Pune\'s most iconic 10-day festival with grand processions and dhol-tasha.' },
