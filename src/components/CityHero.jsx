@@ -110,16 +110,17 @@ export default function CityHero({ onExploreClick }) {
             {city.tagline}
           </p>
 
-          {/* Glass CTA pill */}
+          {/* High contrast CTA pill */}
           <motion.button
             id="hero-explore-btn"
             onClick={onExploreClick}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
             transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-            className="flex items-center gap-2 px-5 py-3 glass-sm glow-primary"
+            className="flex items-center gap-2 px-5 py-3 shadow-lg"
             style={{
               display: 'inline-flex',
+              background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)',
               color: '#ffffff',
               fontFamily: 'DM Sans, system-ui, sans-serif',
               fontWeight: 600,
@@ -128,6 +129,7 @@ export default function CityHero({ onExploreClick }) {
               border: 'none',
               outline: 'none',
               borderRadius: '999px',
+              boxShadow: 'var(--glow-primary), 0 4px 12px rgba(0,0,0,0.3)',
             }}
             aria-label="Start exploring the city"
           >

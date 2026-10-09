@@ -71,11 +71,36 @@ To add a new city:
   comingSoon: false,
   center: [18.5204, 73.8567],
   zoom: 12,
-  heritage: [{ id, name, lat, lng }],
-  places: [],
+  heroImage: '/images/pune/hero-shaniwar-wada.jpg',
+  photoCredits: [],
+  areas: [{ name, lat, lng, scores: { safety, cleanliness, affordability, rating, accessibility } }],
+  culture: {
+    festivals: [{ name, month, description }],
+    traditions: [{ name, description }]
+  },
+  dishes: [
+    { id, name, description, whereToTry, image } // whereToTry is a place id
+  ],
+  heritage: [
+    { id, name, lat, lng, description, history, image }
+  ],
+  places: [
+    {
+      id, name, category, subcategory, area, lat, lng, 
+      priceLevel, avgCost, tags: [], description, bestTime, openHours, image,
+      scores: { safety, cleanliness, affordability, rating, accessibility },
+      verified: true|false
+    }
+  ],
   incidents: [],
 }
 ```
+
+### Data Conventions
+- Coordinates and scores are currently approximate demo data.
+- Images for places should be placed in `public/images/<cityid>/places/<filename>`.
+- Images for dishes should be placed in `public/images/<cityid>/dishes/<filename>`.
+- `utils/scoring.js` contains the `cityScore` weighted average and the Haversine distance calculator.
 
 ---
 
@@ -113,4 +138,4 @@ To add a new city:
 
 ---
 
-*Last updated: Stage 1.5 — Photo-first glass UI*
+*Last updated: Stage 2 — Pune data, food, and interactive map*
