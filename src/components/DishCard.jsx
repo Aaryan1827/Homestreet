@@ -10,7 +10,7 @@ export default function DishCard({ dish }) {
   return (
     <GlassCard className="snap-center shrink-0 w-[240px] flex flex-col p-3 gap-3">
       <div className="w-full h-32 rounded-xl overflow-hidden relative">
-        <CityImage src={dish.image} alt={dish.name} />
+        <CityImage src={dish.image} alt={dish.name} title={dish.name} category="Dish" />
       </div>
       <div className="flex flex-col gap-1">
         <h4 className="font-semibold text-base" style={{ color: 'var(--color-ink)', fontFamily: 'Fraunces, Georgia, serif' }}>

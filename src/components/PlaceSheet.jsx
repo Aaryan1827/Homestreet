@@ -23,11 +23,19 @@ export default function PlaceSheet({ place, onClose }) {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: '100%', opacity: 0 }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={0.2}
+        onDragEnd={(e, { offset, velocity }) => {
+          if (offset.y > 100 || velocity.y > 500) {
+            onClose();
+          }
+        }}
         className="fixed bottom-0 left-0 right-0 z-[1000] lg:left-auto lg:right-4 lg:bottom-4 lg:w-96 glass rounded-t-3xl lg:rounded-3xl shadow-2xl flex flex-col"
-        style={{ maxHeight: '85dvh' }}
+        style={{ maxHeight: '85dvh', touchAction: 'none' }}
       >
         {/* Drag Handle (Mobile) */}
-        <div className="w-full flex justify-center py-3 lg:hidden" onClick={onClose}>
+        <div className="w-full flex justify-center py-3 lg:hidden shrink-0 cursor-grab active:cursor-grabbing">
           <div className="w-12 h-1.5 rounded-full" style={{ backgroundColor: 'var(--color-muted)', opacity: 0.5 }} />
         </div>
 
@@ -43,7 +51,7 @@ export default function PlaceSheet({ place, onClose }) {
         <div className="flex-1 overflow-y-auto pb-safe">
           {/* Header Image */}
           <div className="w-full h-48 relative shrink-0 rounded-t-3xl lg:rounded-t-3xl overflow-hidden">
-            <CityImage src={place.image} alt={place.name} />
+            <CityImage src={place.image} alt={place.name} title={place.name} category={place.subcategory || place.category} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             
             <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
@@ -108,7 +116,7 @@ export default function PlaceSheet({ place, onClose }) {
                 style={{ backgroundColor: 'var(--color-surface-soft)', color: 'var(--color-ink)' }}
               >
                 <Star size={18} />
-                Compare
+                Compare (Soon)
               </motion.button>
             </div>
           </div>

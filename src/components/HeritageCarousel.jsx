@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { ChevronLeft, ChevronRight, MapPin, X } from 'lucide-react'
 import CityImage from './CityImage'
 import GlassCard from './GlassCard'
+import CarouselControls from './CarouselControls'
 
 const CARD_W = 260
 const CARD_H = 380
@@ -58,38 +59,12 @@ export default function HeritageCarousel({ items }) {
         >
           Heritage
         </h2>
-        <div className="flex gap-2">
-          <motion.button
-            id="heritage-prev-btn"
-            onClick={() => scrollToIdx(activeIdx - 1)}
-            whileTap={{ scale: 0.88 }}
-            disabled={activeIdx === 0}
-            className="w-9 h-9 rounded-full flex items-center justify-center"
-            style={{
-              backgroundColor: 'var(--color-surface-soft)',
-              color: 'var(--color-ink)',
-              opacity: activeIdx === 0 ? 0.35 : 1,
-            }}
-            aria-label="Previous heritage site"
-          >
-            <ChevronLeft size={16} />
-          </motion.button>
-          <motion.button
-            id="heritage-next-btn"
-            onClick={() => scrollToIdx(activeIdx + 1)}
-            whileTap={{ scale: 0.88 }}
-            disabled={activeIdx === items.length - 1}
-            className="w-9 h-9 rounded-full flex items-center justify-center"
-            style={{
-              backgroundColor: 'var(--color-surface-soft)',
-              color: 'var(--color-ink)',
-              opacity: activeIdx === items.length - 1 ? 0.35 : 1,
-            }}
-            aria-label="Next heritage site"
-          >
-            <ChevronRight size={16} />
-          </motion.button>
-        </div>
+        <CarouselControls 
+          scrollRef={scrollRef} 
+          itemsCount={items.length} 
+          activeIdx={activeIdx} 
+          onScrollTo={scrollToIdx} 
+        />
       </div>
 
       {/* Scroll track */}
@@ -142,6 +117,8 @@ export default function HeritageCarousel({ items }) {
               <CityImage
                 src={item.image}
                 alt={item.name}
+                title={item.name}
+                category="Heritage"
                 lazy={i > 1}
                 style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
               />
@@ -255,6 +232,8 @@ export default function HeritageCarousel({ items }) {
                 <CityImage
                   src={expanded.image}
                   alt={expanded.name}
+                  title={expanded.name}
+                  category="Heritage"
                   lazy={false}
                   style={{ width: '100%', height: '100%' }}
                 />

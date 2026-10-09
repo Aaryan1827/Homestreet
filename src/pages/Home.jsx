@@ -10,6 +10,29 @@ import DishCard from '../components/DishCard'
 import PlaceCard from '../components/PlaceCard'
 import { Sunrise, Star, Moon, Compass, Sparkles, MapPin, Calendar } from 'lucide-react'
 import { cityScore } from '../utils/scoring'
+import CarouselControls from '../components/CarouselControls'
+
+function TasteOfPune({ dishes }) {
+  const scrollRef = useRef(null)
+  
+  return (
+    <motion.section {...FADE_UP(0.18)} className="flex flex-col gap-3">
+      <div className="flex items-center justify-between px-1">
+        <h2 className="text-xl" style={{ fontFamily: 'Fraunces, Georgia, serif', color: 'var(--color-ink)' }}>
+          Taste of Pune
+        </h2>
+        <CarouselControls scrollRef={scrollRef} itemsCount={dishes.length} />
+      </div>
+      <div ref={scrollRef} className="flex gap-4 overflow-x-auto snap-x-mandatory pb-4 no-scrollbar">
+        {dishes.map((dish, idx) => (
+          <div key={dish.id} className={idx === 0 ? "ml-1" : ""}>
+            <DishCard dish={dish} />
+          </div>
+        ))}
+      </div>
+    </motion.section>
+  )
+}
 
 const MOOD = {
   day: {
@@ -85,18 +108,7 @@ export default function Home() {
 
         {/* Taste of Pune */}
         {city.dishes && city.dishes.length > 0 && (
-          <motion.section {...FADE_UP(0.18)} className="flex flex-col gap-3">
-            <h2 className="text-xl px-1" style={{ fontFamily: 'Fraunces, Georgia, serif', color: 'var(--color-ink)' }}>
-              Taste of {city.name}
-            </h2>
-            <div className="flex gap-4 overflow-x-auto snap-x-mandatory pb-4 no-scrollbar">
-              {city.dishes.map((dish, idx) => (
-                <div key={dish.id} className={idx === 0 ? "ml-1" : ""}>
-                  <DishCard dish={dish} />
-                </div>
-              ))}
-            </div>
-          </motion.section>
+          <TasteOfPune dishes={city.dishes} />
         )}
 
         {/* Eat like a local */}

@@ -23,7 +23,7 @@ export default function PlaceCard({ place, onClick }) {
       className="flex items-center gap-3 p-3 cursor-pointer overflow-hidden"
     >
       <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 relative">
-        <CityImage src={place.image} alt={place.name} />
+        <CityImage src={place.image} alt={place.name} title={place.name} category={place.subcategory || place.category} />
       </div>
       <div className="flex flex-col flex-1 min-w-0">
         <h4 className="font-semibold text-sm truncate" style={{ color: 'var(--color-ink)', fontFamily: 'Fraunces, Georgia, serif' }}>
