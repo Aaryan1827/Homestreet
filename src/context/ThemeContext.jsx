@@ -1,25 +1,19 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { useTime } from './TimeContext'
 
 const THEMES = ['day', 'evening', 'night']
 
-/**
- * Derive theme from local time:
- * - before 17:00  → day
- * - 17:00-19:30   → evening
- * - after 19:30   → night
- */
-function getAutoTheme() {
-  const hour = new Date().getHours()
-  const minutes = new Date().getMinutes()
-  const totalMinutes = hour * 60 + minutes
-  if (totalMinutes < 17 * 60) return 'day'
-  if (totalMinutes < 19 * 60 + 30) return 'evening'
+function getThemeForHour(hour) {
+  if (hour >= 6 && hour < 17) return 'day'
+  if (hour >= 17 && hour < 19.5) return 'evening'
   return 'night'
 }
 
 const ThemeContext = createContext(null)
 
 export function ThemeProvider({ children }) {
+  const { hour } = useTime()
+  
   const [mode, setMode] = useState(() => {
     return localStorage.getItem('homestreet_theme_mode') || 'auto'
   })
@@ -27,8 +21,8 @@ export function ThemeProvider({ children }) {
   const [theme, setThemeState] = useState(() => {
     const saved = localStorage.getItem('homestreet_theme')
     const savedMode = localStorage.getItem('homestreet_theme_mode') || 'auto'
-    if (savedMode === 'auto') return getAutoTheme()
-    return saved || getAutoTheme()
+    if (savedMode === 'auto') return getThemeForHour(hour)
+    return saved || getThemeForHour(hour)
   })
 
   // Apply data-theme attribute to <html>
@@ -36,14 +30,12 @@ export function ThemeProvider({ children }) {
     document.documentElement.setAttribute('data-theme', theme)
   }, [theme])
 
-  // Auto mode: re-evaluate every minute
+  // Auto mode: update whenever time changes
   useEffect(() => {
-    if (mode !== 'auto') return
-    const tick = () => setThemeState(getAutoTheme())
-    tick()
-    const id = setInterval(tick, 60_000)
-    return () => clearInterval(id)
-  }, [mode])
+    if (mode === 'auto') {
+      setThemeState(getThemeForHour(hour))
+    }
+  }, [mode, hour])
 
   /** Cycle through: day → evening → night → day (manual override, disables auto) */
   const cycleTheme = useCallback(() => {
@@ -61,8 +53,8 @@ export function ThemeProvider({ children }) {
   const enableAuto = useCallback(() => {
     setMode('auto')
     localStorage.setItem('homestreet_theme_mode', 'auto')
-    setThemeState(getAutoTheme())
-  }, [])
+    setThemeState(getThemeForHour(hour))
+  }, [hour])
 
   return (
     <ThemeContext.Provider value={{ theme, mode, cycleTheme, enableAuto, THEMES }}>

@@ -5,9 +5,15 @@ import ScoreBadge from './ScoreBadge'
 import ScoreBars from './ScoreBars'
 import { cityScore, scoreColor } from '../utils/scoring'
 import { useCompare } from '../context/CompareContext'
+import { useCity } from '../context/CityContext'
+import { useTime } from '../context/TimeContext'
+import { safetyNow } from '../utils/safety'
+import { ShieldAlert } from 'lucide-react'
 
 export default function PlaceSheet({ place, onClose }) {
   const { addCompareItem } = useCompare()
+  const { city } = useCity()
+  const { hour } = useTime()
 
   if (!place) return null;
 
@@ -98,6 +104,23 @@ export default function PlaceSheet({ place, onClose }) {
             <p className="text-sm leading-relaxed" style={{ color: 'var(--color-muted)' }}>
               {place.description}
             </p>
+
+            {/* Safety Right Now */}
+            {(() => {
+              const { score, label, reason } = safetyNow(place, city.incidents, hour);
+              const color = score >= 75 ? 'text-green-500 bg-green-500/10' : score >= 50 ? 'text-orange-500 bg-orange-500/10' : 'text-red-500 bg-red-500/10';
+              return (
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-[var(--glass-border)]">
+                  <div className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center ${color}`}>
+                    <ShieldAlert size={16} />
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-sm font-bold" style={{ color: 'var(--color-ink)' }}>Safety: {label}</span>
+                    <span className="text-xs" style={{ color: 'var(--color-muted)' }}>{reason}</span>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Scores */}
             <div>

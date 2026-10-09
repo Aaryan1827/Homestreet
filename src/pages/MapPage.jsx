@@ -9,9 +9,13 @@ import { Search, Map as MapIcon, List, Crosshair, Utensils, Bed, Landmark, Trees
 
 import { useCity } from '../context/CityContext'
 import { useTheme } from '../context/ThemeContext'
+import { useTime } from '../context/TimeContext'
 import { cityScore, scoreColor, haversineDistance } from '../utils/scoring'
+import { activeIncidents } from '../utils/safety'
 import PlaceSheet from '../components/PlaceSheet'
 import PlaceCard from '../components/PlaceCard'
+import TimeSlider from '../components/TimeSlider'
+import GlassCard from '../components/GlassCard'
 
 // Define marker icons mapped by category
 const CAT_ICONS = {
@@ -61,6 +65,32 @@ const userIcon = L.divIcon({
   iconAnchor: [10, 10],
 });
 
+const createIncidentIcon = (incident) => {
+  const isSevere = incident.severity === 3;
+  const color = isSevere ? 'rgba(239, 68, 68, 0.8)' : 'rgba(245, 158, 11, 0.8)';
+  const pulseClass = isSevere ? 'pulse-severe' : '';
+  // size scales slightly with reports: base 24px + 2px per report (max 40)
+  const size = Math.min(24 + (incident.reports * 2), 40);
+  
+  const html = `
+    <div class="${pulseClass}" style="
+      width: ${size}px;
+      height: ${size}px;
+      background-color: ${color};
+      border-radius: 50%;
+      box-shadow: 0 0 12px ${color};
+      border: 2px solid white;
+      transition: all 0.3s ease;
+    "></div>
+  `;
+  return L.divIcon({
+    html,
+    className: 'incident-marker',
+    iconSize: [size, size],
+    iconAnchor: [size/2, size/2],
+  })
+}
+
 // Component to handle map flyTo when active place changes
 function MapController({ activePlace, userLoc }) {
   const map = useMap();
@@ -83,13 +113,16 @@ const CHIPS = ['All', 'Food', 'Heritage', 'Hotels', 'Attractions', 'Budget', 'To
 export default function MapPage() {
   const { city } = useCity();
   const { theme } = useTheme();
+  const { hour } = useTime();
   const [searchParams, setSearchParams] = useSearchParams();
   
   const [activeFilter, setActiveFilter] = useState('All');
+  const [showSafety, setShowSafety] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('map'); // 'map' | 'list'
   
   const [activePlaceId, setActivePlaceId] = useState(searchParams.get('place'));
+  const [activeIncident, setActiveIncident] = useState(null);
   const [userLoc, setUserLoc] = useState(null);
 
   const activePlace = useMemo(() => city.places.find(p => p.id === activePlaceId), [city.places, activePlaceId]);
@@ -152,6 +185,11 @@ export default function MapPage() {
     return list.sort((a, b) => cityScore(b) - cityScore(a));
   }, [city.places, activeFilter, searchQuery, userLoc]);
 
+  const currentIncidents = useMemo(() => {
+    if (!showSafety || !city.incidents) return [];
+    return activeIncidents(city.incidents, hour);
+  }, [showSafety, city.incidents, hour]);
+
   return (
     <div className="relative w-full h-[calc(100dvh-60px)] lg:h-[100dvh] flex flex-col pt-[60px]">
       
@@ -172,6 +210,20 @@ export default function MapPage() {
 
         {/* Chips */}
         <div className="flex gap-2 overflow-x-auto pb-2 snap-x-mandatory pointer-events-auto no-scrollbar">
+          <button
+            onClick={() => setShowSafety(s => !s)}
+            className="snap-start shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5"
+            style={{
+              backgroundColor: showSafety ? '#EF4444' : 'var(--glass-bg)',
+              color: showSafety ? '#fff' : 'var(--color-ink)',
+              backdropFilter: 'blur(12px)',
+              border: `1px solid ${showSafety ? 'transparent' : 'var(--glass-border)'}`,
+              boxShadow: showSafety ? '0 0 12px rgba(239, 68, 68, 0.5)' : 'var(--glass-shadow)',
+            }}
+          >
+            Safety {showSafety && 'On'}
+          </button>
+          <div className="w-[1px] h-6 bg-[var(--glass-border)] mx-1 self-center" />
           {CHIPS.map(chip => (
             <button
               key={chip}
@@ -214,7 +266,16 @@ export default function MapPage() {
               key={place.id}
               position={[place.lat, place.lng]}
               icon={createCustomIcon(place)}
-              eventHandlers={{ click: () => { setPlace(place.id); setViewMode('map'); } }}
+              eventHandlers={{ click: () => { setActiveIncident(null); setPlace(place.id); setViewMode('map'); } }}
+            />
+          ))}
+
+          {currentIncidents.map(inc => (
+            <Marker
+              key={inc.id}
+              position={[inc.lat, inc.lng]}
+              icon={createIncidentIcon(inc)}
+              eventHandlers={{ click: () => { setPlace(null); setActiveIncident(inc); } }}
             />
           ))}
         </MapContainer>
@@ -243,6 +304,22 @@ export default function MapPage() {
         )}
       </AnimatePresence>
 
+      {/* ── Time Slider Overlay ── */}
+      <div className="absolute left-4 right-4 bottom-40 lg:bottom-10 lg:right-auto lg:w-72 lg:left-4 z-[1000] pointer-events-auto">
+        <TimeSlider />
+        <AnimatePresence>
+          {showSafety && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
+              className="mt-2 glass-sm px-3 py-2 rounded-xl flex items-center justify-between text-xs"
+            >
+              <div className="flex items-center gap-1.5 font-medium text-[var(--color-ink)]"><div className="w-2.5 h-2.5 rounded-full bg-orange-500" /> Caution</div>
+              <div className="flex items-center gap-1.5 font-medium text-[var(--color-ink)]"><div className="w-2.5 h-2.5 rounded-full bg-red-500 pulse-severe" /> Avoid</div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
       {/* ── Floating Controls ── */}
       <div className="absolute right-4 bottom-24 lg:bottom-10 z-[1000] flex flex-col gap-3 pointer-events-auto">
         <button 
@@ -263,6 +340,46 @@ export default function MapPage() {
 
       {/* ── Place Detail Sheet ── */}
       <PlaceSheet place={activePlace} onClose={() => setPlace(null)} />
+
+      {/* ── Incident Popup ── */}
+      <AnimatePresence>
+        {activeIncident && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="absolute z-[1050] bottom-[110px] left-4 right-4 lg:left-1/2 lg:-translate-x-1/2 lg:w-96 pointer-events-auto"
+          >
+            <GlassCard className="p-4 flex flex-col gap-2 relative shadow-2xl border-t-2" style={{ borderTopColor: activeIncident.severity === 3 ? '#EF4444' : '#F59E0B' }}>
+              <button onClick={() => setActiveIncident(null)} className="absolute top-2 right-2 w-8 h-8 rounded-full glass-sm flex items-center justify-center text-[var(--color-ink)]">
+                ✕
+              </button>
+              <div className="flex items-center gap-2">
+                <span className="text-xs uppercase font-bold tracking-widest" style={{ color: activeIncident.severity === 3 ? '#EF4444' : '#F59E0B' }}>
+                  {activeIncident.type.replace('-', ' ')}
+                </span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full glass-sm text-[var(--color-muted)]">
+                  {activeIncident.hourRange[0]}:00 - {activeIncident.hourRange[1]}:00
+                </span>
+              </div>
+              <p className="text-sm font-medium text-[var(--color-ink)]">
+                {activeIncident.description}
+              </p>
+              <div className="mt-1 flex items-center gap-2 text-xs text-[var(--color-muted)] font-medium group relative cursor-help">
+                <span className="bg-black/5 dark:bg-white/5 px-2 py-1 rounded-md">{activeIncident.reports} community reports (demo)</span>
+                {activeIncident.reports >= 5 && (
+                  <span className="text-green-600 dark:text-green-400 font-bold px-2 py-1 bg-green-500/10 rounded-md">✓ Verified</span>
+                )}
+                {activeIncident.reports >= 5 && (
+                  <div className="absolute bottom-full left-0 mb-1 hidden group-hover:block bg-black text-white text-[10px] px-2 py-1 rounded shadow-lg whitespace-nowrap z-50">
+                    Incidents with 5+ reports get a verified badge.
+                  </div>
+                )}
+              </div>
+            </GlassCard>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   )

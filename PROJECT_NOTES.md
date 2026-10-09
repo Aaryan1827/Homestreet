@@ -138,4 +138,4 @@ To add a new city:
 
 ---
 
-*Last updated: Stage 3 — Compare Context and screen*
+*Last updated: Stage 3 — TimeSlider, Theme Sync, and Safety layer*

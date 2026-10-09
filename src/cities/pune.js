@@ -128,7 +128,21 @@ const pune = {
     { id: 'pataleshwar', name: 'Pataleshwar Cave Temple', category: 'attractions', subcategory: 'heritage', area: 'Shivajinagar', lat: 18.5273, lng: 73.8504, priceLevel: 1, avgCost: 0, tags: ['Caves', 'Ancient', 'Temple'], description: 'An 8th-century rock-cut cave temple carved out of a single basalt rock, dedicated to Lord Shiva.', bestTime: 'Morning', openHours: '8:00 AM - 5:30 PM', image: '/images/pune/places/pataleshwar.jpg', scores: { safety: 85, cleanliness: 75, affordability: 100, rating: 85, accessibility: 80 }, verified: true },
     { id: 'fc-road', name: 'Fergusson College Road', category: 'attractions', subcategory: 'market', area: 'Deccan', lat: 18.5205, lng: 73.8390, priceLevel: 2, avgCost: 1000, tags: ['Shopping', 'Street Food', 'Youth'], description: 'Pune\'s most famous high street, lined with shops, cafes, and packed with students.', bestTime: 'Evening', openHours: '10:00 AM - 10:00 PM', image: '/images/pune/places/fcroad.jpg', scores: { safety: 85, cleanliness: 70, affordability: 80, rating: 92, accessibility: 90 }, verified: true }
   ],
-  incidents: [],
+  // DEMO DATA: Mock incidents spread across areas
+  incidents: [
+    { id: 'i1', type: 'poor-lighting', lat: 18.5362, lng: 73.8939, hourRange: [18, 6], severity: 1, description: 'Streetlights out on main road.', reports: 8 },
+    { id: 'i2', type: 'theft', lat: 18.5204, lng: 73.8567, hourRange: [20, 3], severity: 2, description: 'Pickpocketing reported near market.', reports: 2 },
+    { id: 'i3', type: 'harassment', lat: 18.5626, lng: 73.9168, hourRange: [22, 4], severity: 3, description: 'Group of men loitering near metro station.', reports: 6 },
+    { id: 'i4', type: 'traffic-jam', lat: 18.5132, lng: 73.8202, hourRange: [17, 21], severity: 1, description: 'Heavy bottleneck due to construction.', reports: 12 },
+    { id: 'i5', type: 'accident', lat: 18.5590, lng: 73.7868, hourRange: [18, 23], severity: 2, description: 'Minor collision at junction.', reports: 3 },
+    { id: 'i6', type: 'poor-lighting', lat: 18.5020, lng: 73.8241, hourRange: [19, 5], severity: 1, description: 'Dark alleyway near residential zone.', reports: 5 },
+    { id: 'i7', type: 'flooding', lat: 18.5085, lng: 73.8340, hourRange: [0, 24], severity: 2, description: 'Water logging after pipe burst.', reports: 4 },
+    { id: 'i8', type: 'harassment', lat: 18.5314, lng: 73.8446, hourRange: [23, 5], severity: 3, description: 'Suspicious activity near ATM.', reports: 1 },
+    { id: 'i9', type: 'theft', lat: 18.5280, lng: 73.8745, hourRange: [12, 17], severity: 2, description: 'Bag snatching incident.', reports: 7 },
+    { id: 'i10', type: 'poor-lighting', lat: 18.5800, lng: 73.7380, hourRange: [18.5, 6], severity: 1, description: 'Park area is completely unlit.', reports: 10 },
+    { id: 'i11', type: 'traffic-jam', lat: 18.5913, lng: 73.7389, hourRange: [17, 20.5], severity: 2, description: 'Hinjewadi IT park evening rush hour.', reports: 15 },
+    { id: 'i12', type: 'theft', lat: 18.5140, lng: 73.8550, hourRange: [11, 16], severity: 2, description: 'Multiple pickpocketing reports in Tulshibaug.', reports: 6 }
+  ],
 }
 
 // Convert heritage items into Places for the map

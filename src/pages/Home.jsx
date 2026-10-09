@@ -8,9 +8,12 @@ import GlassCard from '../components/GlassCard'
 import HeritageCarousel from '../components/HeritageCarousel'
 import DishCard from '../components/DishCard'
 import PlaceCard from '../components/PlaceCard'
-import { Sunrise, Star, Moon, Compass, Sparkles, MapPin, Calendar } from 'lucide-react'
+import { Sunrise, Star, Moon, Compass, Sparkles, MapPin, Calendar, ShieldAlert } from 'lucide-react'
 import { cityScore } from '../utils/scoring'
 import CarouselControls from '../components/CarouselControls'
+import TimeSlider from '../components/TimeSlider'
+import { useTime } from '../context/TimeContext'
+import { activeIncidents } from '../utils/safety'
 
 function TasteOfPune({ dishes }) {
   const scrollRef = useRef(null)
@@ -58,9 +61,48 @@ const FADE_UP = (delay = 0) => ({
   transition: { duration: 0.48, ease: [0.2, 0, 0.2, 1], delay },
 })
 
+function SafetyPulse({ city, hour }) {
+  if (!city.incidents) return null
+  const active = activeIncidents(city.incidents, hour)
+  
+  if (active.length === 0) {
+    return (
+      <GlassCard className="p-4 flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-green-500/10 text-green-500">
+          <ShieldAlert size={20} />
+        </div>
+        <div>
+          <h3 className="font-semibold text-sm" style={{ color: 'var(--color-ink)' }}>Safety Pulse</h3>
+          <p className="text-xs text-green-600 dark:text-green-400 font-medium mt-0.5">Quiet right now. 0 active incidents.</p>
+        </div>
+      </GlassCard>
+    )
+  }
+
+  // Count incidents by area (mock logic based on rough areas if we have lat/lng or just overall)
+  // For simplicity, we just say: N active incidents
+  const maxSeverity = Math.max(...active.map(i => i.severity))
+  const color = maxSeverity === 3 ? 'text-red-500 bg-red-500/10' : 'text-orange-500 bg-orange-500/10'
+
+  return (
+    <GlassCard className="p-4 flex items-center gap-3">
+      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
+        <ShieldAlert size={20} />
+      </div>
+      <div>
+        <h3 className="font-semibold text-sm" style={{ color: 'var(--color-ink)' }}>Safety Pulse</h3>
+        <p className="text-xs font-medium mt-0.5" style={{ color: 'var(--color-muted)' }}>
+          <span className={maxSeverity === 3 ? 'text-red-500' : 'text-orange-500'}>{active.length} incident{active.length > 1 ? 's' : ''}</span> reported across the city. Stay aware.
+        </p>
+      </div>
+    </GlassCard>
+  )
+}
+
 export default function Home() {
   const { city } = useCity()
   const { theme } = useTheme()
+  const { hour } = useTime()
   const navigate = useNavigate()
   const mood = MOOD[theme]
   const MoodIcon = mood.icon
@@ -99,6 +141,16 @@ export default function Home() {
               </p>
             </div>
           </GlassCard>
+        </motion.div>
+
+        {/* Time Slider */}
+        <motion.div {...FADE_UP(0.08)}>
+          <TimeSlider />
+        </motion.div>
+
+        {/* Safety Pulse */}
+        <motion.div {...FADE_UP(0.10)}>
+          <SafetyPulse city={city} hour={hour} />
         </motion.div>
 
         {/* Heritage Carousel */}
