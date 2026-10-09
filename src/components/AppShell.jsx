@@ -8,6 +8,7 @@ import MapPage from '../pages/MapPage'
 import Compare from '../pages/Compare'
 import Report from '../pages/Report'
 import Assistant from '../pages/Assistant'
+import CompareTray from './CompareTray'
 
 export default function AppShell() {
   const location = useLocation()
@@ -46,6 +47,7 @@ export default function AppShell() {
         </main>
       </div>
 
+      <CompareTray />
       {/* Mobile floating glass bottom nav */}
       <BottomNav />
     </div>

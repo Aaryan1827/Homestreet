@@ -138,4 +138,4 @@ To add a new city:
 
 ---
 
-*Last updated: Stage 2 — Pune data, food, and interactive map*
+*Last updated: Stage 3 — Compare Context and screen*

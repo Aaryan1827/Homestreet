@@ -4,8 +4,11 @@ import CityImage from './CityImage'
 import ScoreBadge from './ScoreBadge'
 import ScoreBars from './ScoreBars'
 import { cityScore, scoreColor } from '../utils/scoring'
+import { useCompare } from '../context/CompareContext'
 
 export default function PlaceSheet({ place, onClose }) {
+  const { addCompareItem } = useCompare()
+
   if (!place) return null;
 
   const cScore = cityScore(place);
@@ -14,6 +17,11 @@ export default function PlaceSheet({ place, onClose }) {
   const handleDirections = () => {
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${place.lat},${place.lng}`, '_blank');
   };
+
+  const handleCompare = () => {
+    addCompareItem(place)
+    onClose()
+  }
 
   return (
     <AnimatePresence>
@@ -112,11 +120,12 @@ export default function PlaceSheet({ place, onClose }) {
               </motion.button>
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold opacity-50 cursor-not-allowed"
+                onClick={handleCompare}
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold"
                 style={{ backgroundColor: 'var(--color-surface-soft)', color: 'var(--color-ink)' }}
               >
                 <Star size={18} />
-                Compare (Soon)
+                Compare
               </motion.button>
             </div>
           </div>

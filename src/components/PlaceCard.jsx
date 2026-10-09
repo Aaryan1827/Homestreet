@@ -4,9 +4,12 @@ import CityImage from './CityImage'
 import ScoreBadge from './ScoreBadge'
 import { cityScore } from '../utils/scoring'
 import GlassCard from './GlassCard'
+import { Star } from 'lucide-react'
+import { useCompare } from '../context/CompareContext'
 
 export default function PlaceCard({ place, onClick }) {
   const navigate = useNavigate();
+  const { addCompareItem } = useCompare();
   const cScore = cityScore(place);
   const price = '₹'.repeat(place.priceLevel || 1);
 
@@ -14,6 +17,11 @@ export default function PlaceCard({ place, onClick }) {
     if (onClick) onClick();
     else navigate(`/map?place=${place.id}`);
   };
+
+  const handleCompare = (e) => {
+    e.stopPropagation();
+    addCompareItem(place);
+  }
 
   return (
     <GlassCard 
@@ -38,8 +46,14 @@ export default function PlaceCard({ place, onClick }) {
           <span style={{ color: 'var(--color-primary)' }}>{price}</span>
         </div>
       </div>
-      <div className="shrink-0">
+      <div className="shrink-0 flex flex-col items-center gap-2">
         <ScoreBadge score={cScore} size="sm" />
+        <button 
+          onClick={handleCompare}
+          className="text-[10px] font-bold uppercase tracking-wide glass-sm px-2 py-0.5 rounded flex items-center gap-1 text-[var(--color-ink)] hover:text-[var(--color-primary)] transition-colors"
+        >
+          <Star size={10} /> +
+        </button>
       </div>
     </GlassCard>
   )
