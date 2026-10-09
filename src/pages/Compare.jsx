@@ -5,7 +5,7 @@ import { useCompare } from '../context/CompareContext'
 import GlassCard from '../components/GlassCard'
 import ScoreBars from '../components/ScoreBars'
 import ScoreBadge from '../components/ScoreBadge'
-import { Search, X, Trophy, Settings2, RotateCcw } from 'lucide-react'
+import { Search, X, Trophy, Settings2, RotateCcw, GitCompare } from 'lucide-react'
 import { scoreColor } from '../utils/scoring'
 
 // Helper for SVG polar coordinates
