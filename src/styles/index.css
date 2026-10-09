@@ -1,0 +1,224 @@
+@import './theme.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================
+   Base
+   ============================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  transition:
+    background-color var(--theme-transition),
+    color var(--theme-transition);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ============================
+   Typography
+   ============================ */
+h1, h2, h3, h4, .font-display {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+}
+
+/* ============================
+   Themed transitions
+   ============================ */
+.themed {
+  transition:
+    background-color var(--theme-transition),
+    color var(--theme-transition),
+    border-color var(--theme-transition),
+    box-shadow var(--theme-transition);
+}
+
+/* ============================
+   Glass card — reusable utility
+   ============================ */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 24px;
+  /* Fallback where backdrop-filter unsupported */
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .glass {
+    background: var(--color-surface);
+  }
+}
+
+.glass-sm {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 20px;
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-sm {
+    background: var(--color-surface);
+  }
+}
+
+/* ============================
+   Scrollbar (minimal)
+   ============================ */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-muted);
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+/* ============================
+   Focus states
+   ============================ */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ============================
+   Card shadows
+   ============================ */
+.card-shadow {
+  box-shadow: 0 4px 20px rgba(var(--shadow-color) / 0.12),
+              0 1px 4px rgba(var(--shadow-color) / 0.08);
+}
+.card-shadow-lg {
+  box-shadow: 0 8px 32px rgba(var(--shadow-color) / 0.16),
+              0 2px 8px rgba(var(--shadow-color) / 0.10);
+}
+
+/* ============================
+   Night-mode glow
+   ============================ */
+.glow-primary {
+  box-shadow: var(--glow-primary);
+  transition: box-shadow var(--theme-transition);
+}
+
+/* ============================
+   Ken Burns animation (hero)
+   ============================ */
+@keyframes kenBurns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.08); }
+}
+.ken-burns {
+  animation: kenBurns 20s ease-in-out alternate infinite;
+  will-change: transform;
+}
+
+/* ============================
+   Twinkling stars (night)
+   ============================ */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; }
+  50%       { opacity: 0.9; }
+}
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  animation: twinkle var(--twinkle-dur, 2.5s) ease-in-out infinite;
+  animation-delay: var(--twinkle-delay, 0s);
+  opacity: var(--star-opacity, 0);
+  transition: opacity var(--theme-transition);
+  pointer-events: none;
+}
+
+/* ============================
+   Placeholder gradient
+   ============================ */
+.city-image-placeholder {
+  background: var(--placeholder-gradient);
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease-in-out alternate infinite;
+}
+@keyframes gradientShift {
+  from { background-position: 0% 50%; }
+  to   { background-position: 100% 50%; }
+}
+
+/* ============================
+   Hero photo transition
+   ============================ */
+.hero-photo {
+  transition: filter var(--theme-transition);
+  filter: var(--hero-photo-filter, none);
+}
+
+/* ============================
+   Safe area insets
+   ============================ */
+.safe-top  { padding-top: env(safe-area-inset-top); }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+/* ============================
+   Scroll-snap carousel
+   ============================ */
+.snap-x-mandatory {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.snap-x-mandatory::-webkit-scrollbar { display: none; }
+.snap-center { scroll-snap-align: center; }
+
+/* ============================
+   Heritage card expand overlay
+   ============================ */
+.heritage-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 12px 24px;
+}
+@media (min-width: 640px) {
+  .heritage-overlay {
+    align-items: center;
+    padding: 24px;
+  }
+}
+
+/* ============================
+   Reduced motion
+   ============================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .ken-burns { animation: none !important; }
+  .star { animation: none !important; }
+}

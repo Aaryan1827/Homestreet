@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- House icon with terracotta color -->
+  <polygon points="16,3 29,14 25,14 25,29 7,29 7,14 3,14" fill="#C65D3B"/>
+  <rect x="12" y="19" width="8" height="10" fill="#FFF4E0"/>
+  <rect x="12" y="17" width="8" height="4" rx="1" fill="#F28C38"/>
+</svg>

@@ -1,0 +1,140 @@
+/* ====================================
+   Homestreet — Theme CSS Variables
+   3 palettes: day | evening | night
+   Photo-first, glassmorphism design
+   ==================================== */
+
+/* ====== Global / Score colors ====== */
+:root {
+  --color-safe: #3F9D6B;
+  --color-caution: #E2A33B;
+  --color-danger: #D6453D;
+  --theme-transition: 600ms ease;
+}
+
+/* ============ DAY (default) ============ */
+[data-theme="day"] {
+  --color-bg: #FFF4E0;
+  --color-surface: #FFFFFF;
+  --color-surface-soft: #FBE9CC;
+  --color-primary: #C65D3B;
+  --color-accent: #F28C38;
+  --color-ink: #3B2A20;
+  --color-muted: #8A6F5E;
+  --color-border: #E8D5BC;
+  --shadow-color: 59 42 32;
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --glass-shadow: 0 8px 32px rgba(59, 42, 32, 0.14), 0 1px 6px rgba(59, 42, 32, 0.08);
+
+  /* Photo overlays */
+  --hero-overlay: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.05) 0%,
+    rgba(0,0,0,0.10) 50%,
+    var(--color-bg) 100%
+  );
+  --hero-photo-filter: brightness(0.95) saturate(1.05);
+  --photo-blend: normal;
+
+  /* Placeholder gradient (terracotta → orange → deep brown) */
+  --placeholder-gradient: linear-gradient(
+    135deg,
+    #C65D3B 0%,
+    #E8874A 30%,
+    #F28C38 55%,
+    #A0522D 80%,
+    #3B2A20 100%
+  );
+
+  /* Glow (subtle in day) */
+  --glow-primary: none;
+  --glow-nav-pill: none;
+  --star-opacity: 0;
+}
+
+/* ============ EVENING ============ */
+[data-theme="evening"] {
+  --color-bg: #F6D9B0;
+  --color-surface: #FFF0D6;
+  --color-surface-soft: #EEC98C;
+  --color-primary: #B8482B;
+  --color-accent: #E8741F;
+  --color-ink: #3B2A20;
+  --color-muted: #7A5A46;
+  --color-border: #D9BF96;
+  --shadow-color: 59 42 32;
+
+  /* Glass */
+  --glass-bg: rgba(255, 240, 214, 0.58);
+  --glass-border: rgba(255, 200, 120, 0.30);
+  --glass-shadow: 0 8px 32px rgba(59, 42, 32, 0.16), 0 1px 6px rgba(59, 42, 32, 0.08);
+
+  /* Photo overlays — golden hour soft-light blend */
+  --hero-overlay: linear-gradient(
+    to bottom,
+    rgba(232, 116, 31, 0.20) 0%,
+    rgba(200, 80, 20, 0.18) 45%,
+    var(--color-bg) 100%
+  );
+  --hero-photo-filter: brightness(0.90) saturate(1.15);
+  --photo-blend: soft-light;
+
+  /* Placeholder gradient */
+  --placeholder-gradient: linear-gradient(
+    135deg,
+    #B8482B 0%,
+    #E8741F 35%,
+    #F6A35A 60%,
+    #7A3520 100%
+  );
+
+  /* Glow */
+  --glow-primary: none;
+  --glow-nav-pill: none;
+  --star-opacity: 0;
+}
+
+/* ============ NIGHT ============ */
+[data-theme="night"] {
+  --color-bg: #1B1F3B;
+  --color-surface: #262B52;
+  --color-surface-soft: #2F3563;
+  --color-primary: #F28C38;
+  --color-accent: #F6B26B;
+  --color-ink: #FFF4E0;
+  --color-muted: #B7B3D1;
+  --color-border: #3D4470;
+  --shadow-color: 0 0 0;
+
+  /* Glass — darker, more opaque in night */
+  --glass-bg: rgba(38, 43, 82, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-shadow: 0 8px 40px rgba(0, 0, 0, 0.45), 0 1px 6px rgba(0, 0, 0, 0.25);
+
+  /* Photo overlays — darken + cool + navy gradient */
+  --hero-overlay: linear-gradient(
+    to bottom,
+    rgba(15, 18, 45, 0.35) 0%,
+    rgba(20, 24, 55, 0.55) 50%,
+    var(--color-bg) 100%
+  );
+  --hero-photo-filter: brightness(0.55) saturate(0.85) hue-rotate(10deg);
+  --photo-blend: normal;
+
+  /* Placeholder gradient — night navy tones */
+  --placeholder-gradient: linear-gradient(
+    135deg,
+    #1B1F3B 0%,
+    #2A2D58 35%,
+    #3D3060 60%,
+    #F28C38 100%
+  );
+
+  /* Orange glow accents for night */
+  --glow-primary: 0 0 20px rgba(242, 140, 56, 0.45), 0 0 8px rgba(242, 140, 56, 0.25);
+  --glow-nav-pill: 0 0 14px rgba(242, 140, 56, 0.30);
+  --star-opacity: 1;
+}
