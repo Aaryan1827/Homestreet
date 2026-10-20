@@ -8,7 +8,7 @@ import GlassCard from '../components/GlassCard'
 import HeritageCarousel from '../components/HeritageCarousel'
 import DishCard from '../components/DishCard'
 import PlaceCard from '../components/PlaceCard'
-import { Sunrise, Star, Moon, Compass, Sparkles, MapPin, Calendar, ShieldAlert } from 'lucide-react'
+import { Sunrise, Star, Moon, Compass, Sparkles, MapPin, ShieldAlert, Camera, ChevronDown, ExternalLink } from 'lucide-react'
 import { cityScore } from '../utils/scoring'
 import CarouselControls from '../components/CarouselControls'
 import TimeSlider from '../components/TimeSlider'
@@ -274,17 +274,113 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Footer */}
-        {city.photoCredits && city.photoCredits.length > 0 && (
-          <motion.footer {...FADE_UP(0.42)} className="text-center pb-2">
-            <p className="text-xs" style={{ color: 'var(--color-muted)' }}>
-              Photo credits: {city.photoCredits.map((c, i) => (
-                <span key={i}>{c.label} © {c.credit}{i < city.photoCredits.length - 1 ? ' · ' : ''}</span>
-              ))}
-            </p>
-          </motion.footer>
-        )}
+        {/* Photo credits collapsible section */}
+        <PhotoCreditsSection credits={city.photoCredits} />
       </div>
     </div>
+  )
+}
+
+function PhotoCreditsSection({ credits }) {
+  const [isOpen, setIsOpen] = useState(false)
+
+  if (!credits || credits.length === 0) return null
+
+  return (
+    <motion.footer {...FADE_UP(0.42)} className="pb-3">
+      <div
+        className="rounded-2xl transition-all duration-300 overflow-hidden"
+        style={{
+          background: 'var(--glass-bg)',
+          border: '1px solid var(--glass-border)',
+          boxShadow: 'var(--glass-shadow)',
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => setIsOpen((prev) => !prev)}
+          className="w-full px-4 py-3 flex items-center justify-between text-left cursor-pointer transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+          aria-expanded={isOpen}
+          aria-controls="photo-credits-content"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div
+              className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+              style={{
+                backgroundColor: 'var(--color-surface-soft)',
+                color: 'var(--color-primary)',
+              }}
+            >
+              <Camera size={15} />
+            </div>
+            <div className="flex flex-col">
+              <span
+                className="text-xs font-semibold tracking-wide"
+                style={{ color: 'var(--color-ink)' }}
+              >
+                Photo credits ({credits.length})
+              </span>
+              <span className="text-[10px]" style={{ color: 'var(--color-muted)' }}>
+                Freely licensed images from Wikimedia Commons & Flickr
+              </span>
+            </div>
+          </div>
+          <motion.div
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
+            className="shrink-0 ml-2"
+            style={{ color: 'var(--color-muted)' }}
+          >
+            <ChevronDown size={16} />
+          </motion.div>
+        </button>
+
+        {isOpen && (
+          <div
+            id="photo-credits-content"
+            className="px-4 pb-4 pt-1 border-t flex flex-col gap-2 text-xs"
+            style={{ borderColor: 'var(--glass-border)' }}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
+              {credits.map((c, i) => (
+                <div
+                  key={c.file || i}
+                  className="p-2.5 rounded-xl flex items-start justify-between gap-2"
+                  style={{
+                    backgroundColor: 'var(--color-surface-soft)',
+                  }}
+                >
+                  <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                    <span
+                      className="font-medium text-xs truncate"
+                      style={{ color: 'var(--color-ink)' }}
+                      title={c.title}
+                    >
+                      {c.title}
+                    </span>
+                    <span className="text-[11px]" style={{ color: 'var(--color-muted)' }}>
+                      By <strong className="font-medium">{c.author}</strong> • <span className="opacity-90">{c.license}</span>
+                    </span>
+                  </div>
+                  {c.source && (
+                    <a
+                      href={c.source}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 p-1 rounded-md transition-opacity hover:opacity-100 opacity-60"
+                      style={{ color: 'var(--color-primary)' }}
+                      title="View original image source"
+                      aria-label={`Source for ${c.title}`}
+                    >
+                      <ExternalLink size={13} />
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </motion.footer>
   )
 }

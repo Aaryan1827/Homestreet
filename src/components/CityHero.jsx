@@ -40,6 +40,8 @@ export default function CityHero({ onExploreClick }) {
         <CityImage
           src={city.heroImage}
           alt={`${city.name} city landscape`}
+          title={city.name}
+          category={city.tagline}
           lazy={false}
           className="ken-burns"
           style={{ width: '100%', height: '108%', marginTop: '-4%' }}
