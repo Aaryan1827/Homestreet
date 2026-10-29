@@ -45,24 +45,29 @@ export default function PlaceSheet({ place, onClose }) {
             onClose();
           }
         }}
-        className="fixed bottom-0 left-0 right-0 z-[1000] lg:left-auto lg:right-4 lg:bottom-4 lg:w-96 glass rounded-t-3xl lg:rounded-3xl shadow-2xl flex flex-col"
-        style={{ maxHeight: '85dvh', touchAction: 'none' }}
+        className="fixed bottom-0 left-0 right-0 z-[1000] lg:left-auto lg:right-4 lg:bottom-4 lg:w-96 rounded-t-3xl lg:rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-[var(--color-border)] themed"
+        style={{
+          maxHeight: '85dvh',
+          touchAction: 'none',
+          backgroundColor: 'var(--color-surface)',
+        }}
       >
         {/* Drag Handle (Mobile) */}
-        <div className="w-full flex justify-center py-3 lg:hidden shrink-0 cursor-grab active:cursor-grabbing">
-          <div className="w-12 h-1.5 rounded-full" style={{ backgroundColor: 'var(--color-muted)', opacity: 0.5 }} />
+        <div className="w-full flex justify-center py-2.5 lg:hidden shrink-0 cursor-grab active:cursor-grabbing" style={{ backgroundColor: 'var(--color-surface)' }}>
+          <div className="w-12 h-1.5 rounded-full" style={{ backgroundColor: 'var(--color-muted)', opacity: 0.4 }} />
         </div>
 
         {/* Close Button (Desktop) */}
         <button 
           onClick={onClose}
-          className="hidden lg:flex absolute top-4 right-4 w-8 h-8 rounded-full items-center justify-center z-10 glass-sm"
-          style={{ color: 'var(--color-ink)' }}
+          className="hidden lg:flex absolute top-3 right-3 w-8 h-8 rounded-full items-center justify-center z-10 shadow-md backdrop-blur-md transition-transform hover:scale-105"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.45)', color: 'white' }}
+          aria-label="Close"
         >
           <X size={16} />
         </button>
 
-        <div className="flex-1 overflow-y-auto pb-safe">
+        <div className="flex-1 overflow-y-auto pb-safe" style={{ backgroundColor: 'var(--color-surface)' }}>
           {/* Header Image */}
           <div className="w-full h-48 relative shrink-0 rounded-t-3xl lg:rounded-t-3xl overflow-hidden">
             <CityImage src={place.image} alt={place.name} title={place.name} category={place.subcategory || place.category} />
@@ -76,7 +81,7 @@ export default function PlaceSheet({ place, onClose }) {
                 <h2 className="text-2xl font-bold text-white leading-tight" style={{ fontFamily: 'Fraunces, Georgia, serif' }}>
                   {place.name}
                 </h2>
-                <p className="text-sm text-white/90 flex items-center gap-1 mt-1 font-medium">
+                <p className="text-sm text-white/95 flex items-center gap-1 mt-1 font-semibold">
                   <MapPin size={14} /> {place.area}
                   {place.distance && ` • ${place.distance.toFixed(1)} km`}
                 </p>
@@ -85,38 +90,48 @@ export default function PlaceSheet({ place, onClose }) {
             </div>
           </div>
 
-          <div className="p-5 flex flex-col gap-6">
+          <div className="p-5 flex flex-col gap-5" style={{ backgroundColor: 'var(--color-surface)' }}>
             {/* Quick Info */}
-            <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--color-ink)' }}>
+            <div className="flex items-center gap-4 text-base font-bold" style={{ color: 'var(--color-ink)' }}>
               <div className="flex items-center gap-1.5">
-                <span className="font-semibold" style={{ color: 'var(--color-primary)' }}>{price}</span>
-                <span style={{ color: 'var(--color-muted)' }}>• ₹{place.avgCost}</span>
+                <span className="text-lg font-bold" style={{ color: 'var(--color-primary)' }}>{price}</span>
+                <span className="font-bold">₹{place.avgCost}</span>
               </div>
               {place.openHours && (
-                <div className="flex items-center gap-1.5">
-                  <Clock size={15} style={{ color: 'var(--color-muted)' }} />
+                <div className="flex items-center gap-1.5 font-semibold text-sm" style={{ color: 'var(--color-ink)' }}>
+                  <Clock size={16} style={{ color: 'var(--color-primary)' }} />
                   <span>{place.openHours}</span>
                 </div>
               )}
             </div>
 
             {/* Description */}
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-muted)' }}>
+            <p className="text-[15px] font-medium leading-relaxed" style={{ color: 'var(--color-ink)', opacity: 0.95 }}>
               {place.description}
             </p>
 
             {/* Safety Right Now */}
             {(() => {
               const { score, label, reason } = safetyNow(place, city.incidents, hour);
-              const color = score >= 75 ? 'text-green-500 bg-green-500/10' : score >= 50 ? 'text-orange-500 bg-orange-500/10' : 'text-red-500 bg-red-500/10';
+              const color = score >= 75 ? 'text-green-600 bg-green-500/15' : score >= 50 ? 'text-orange-600 bg-orange-500/15' : 'text-red-600 bg-red-500/15';
               return (
-                <div className="flex items-start gap-3 p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-[var(--glass-border)]">
-                  <div className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center ${color}`}>
-                    <ShieldAlert size={16} />
+                <div 
+                  className="flex items-start gap-3 p-3.5 rounded-2xl border"
+                  style={{
+                    backgroundColor: 'var(--color-surface-soft)',
+                    borderColor: 'var(--color-border)',
+                  }}
+                >
+                  <div className={`w-9 h-9 rounded-xl shrink-0 flex items-center justify-center font-bold shadow-sm ${color}`}>
+                    <ShieldAlert size={18} />
                   </div>
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-bold" style={{ color: 'var(--color-ink)' }}>Safety: {label}</span>
-                    <span className="text-xs" style={{ color: 'var(--color-muted)' }}>{reason}</span>
+                    <span className="text-[15px] font-bold" style={{ color: 'var(--color-ink)' }}>
+                      Safety: {label}
+                    </span>
+                    <span className="text-xs font-semibold" style={{ color: 'var(--color-ink)', opacity: 0.85 }}>
+                      {reason}
+                    </span>
                   </div>
                 </div>
               );
@@ -124,7 +139,7 @@ export default function PlaceSheet({ place, onClose }) {
 
             {/* Scores */}
             <div>
-              <h3 className="text-base font-bold mb-3" style={{ fontFamily: 'Fraunces, Georgia, serif', color: 'var(--color-ink)' }}>
+              <h3 className="text-lg font-bold mb-3" style={{ fontFamily: 'Fraunces, Georgia, serif', color: 'var(--color-ink)' }}>
                 Scores
               </h3>
               <ScoreBars scores={place.scores} />
@@ -135,7 +150,7 @@ export default function PlaceSheet({ place, onClose }) {
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={handleDirections}
-                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-white shadow-lg"
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm text-white shadow-lg"
                 style={{ backgroundColor: 'var(--color-primary)' }}
               >
                 <Navigation size={18} />
@@ -144,8 +159,12 @@ export default function PlaceSheet({ place, onClose }) {
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={handleCompare}
-                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold"
-                style={{ backgroundColor: 'var(--color-surface-soft)', color: 'var(--color-ink)' }}
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm border"
+                style={{ 
+                  backgroundColor: 'var(--color-surface-soft)', 
+                  color: 'var(--color-ink)',
+                  borderColor: 'var(--color-border)',
+                }}
               >
                 <Star size={18} />
                 Compare

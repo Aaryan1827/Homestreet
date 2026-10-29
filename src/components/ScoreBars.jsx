@@ -12,13 +12,13 @@ export default function ScoreBars({ scores }) {
   ];
 
   return (
-    <div className="flex flex-col gap-1.5 w-full">
+    <div className="flex flex-col gap-2 w-full">
       {labels.map(({ key, name }) => {
         const val = scores[key] || 0;
         return (
-          <div key={key} className="flex items-center gap-2 text-[10px] font-medium" style={{ color: 'var(--color-ink)' }}>
-            <span className="w-16">{name}</span>
-            <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--color-surface-soft)' }}>
+          <div key={key} className="flex items-center gap-2.5 text-xs font-bold" style={{ color: 'var(--color-ink)' }}>
+            <span className="w-20 font-bold">{name}</span>
+            <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--color-surface-soft)' }}>
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${val}%` }}
@@ -27,7 +27,7 @@ export default function ScoreBars({ scores }) {
                 style={{ backgroundColor: scoreColor(val) }}
               />
             </div>
-            <span className="w-6 text-right font-semibold">{val}</span>
+            <span className="w-7 text-right font-bold text-xs">{val}</span>
           </div>
         )
       })}

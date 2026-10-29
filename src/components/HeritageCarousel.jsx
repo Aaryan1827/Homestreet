@@ -23,7 +23,8 @@ export default function HeritageCarousel({ items }) {
       setActiveIdx(clamped)
       const el = scrollRef.current
       if (!el) return
-      const cardEl = el.children[clamped]
+      const cards = el.querySelectorAll('[data-heritage-card]')
+      const cardEl = cards[clamped]
       if (!cardEl) return
       cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
     },
@@ -33,11 +34,16 @@ export default function HeritageCarousel({ items }) {
   const handleScroll = useCallback(() => {
     const el = scrollRef.current
     if (!el) return
-    const center = el.scrollLeft + el.offsetWidth / 2
+    const elRect = el.getBoundingClientRect()
+    const center = elRect.left + elRect.width / 2
+    const cards = el.querySelectorAll('[data-heritage-card]')
+    if (!cards || cards.length === 0) return
+
     let closest = 0
     let minDist = Infinity
-    Array.from(el.children).forEach((child, i) => {
-      const childCenter = child.offsetLeft + child.offsetWidth / 2
+    cards.forEach((child, i) => {
+      const childRect = child.getBoundingClientRect()
+      const childCenter = childRect.left + childRect.width / 2
       const dist = Math.abs(center - childCenter)
       if (dist < minDist) {
         minDist = dist
@@ -46,6 +52,17 @@ export default function HeritageCarousel({ items }) {
     })
     setActiveIdx(closest)
   }, [])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleScroll()
+    }, 100)
+    window.addEventListener('resize', handleScroll)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('resize', handleScroll)
+    }
+  }, [handleScroll])
 
   if (!items || items.length === 0) return null
 
@@ -70,7 +87,7 @@ export default function HeritageCarousel({ items }) {
       {/* Scroll track */}
       <div
         ref={scrollRef}
-        className="snap-x-mandatory flex gap-4 px-4 overflow-x-auto pb-4"
+        className="snap-x-mandatory flex gap-4 px-4 overflow-x-auto pb-4 no-scrollbar"
         onScroll={handleScroll}
         role="list"
         aria-label="Heritage sites"
@@ -83,6 +100,7 @@ export default function HeritageCarousel({ items }) {
           return (
             <motion.div
               key={item.id}
+              data-heritage-card="true"
               layoutId={`heritage-card-${item.id}`}
               className="snap-center shrink-0 cursor-pointer"
               style={{
@@ -91,11 +109,15 @@ export default function HeritageCarousel({ items }) {
                 borderRadius: '24px',
                 overflow: 'hidden',
                 position: 'relative',
+                boxShadow: isActive
+                  ? '0 20px 35px -10px rgba(0, 0, 0, 0.4), 0 0 0 2px var(--color-primary)'
+                  : '0 8px 20px -6px rgba(0, 0, 0, 0.2)',
               }}
               animate={{
-                scale: isActive ? 1 : 0.88,
+                scale: isActive ? 1.04 : 0.88,
                 opacity: isActive ? 1 : 0.72,
-                rotateY: isActive ? 0 : i < activeIdx ? 6 : -6,
+                rotateY: isActive ? 0 : i < activeIdx ? 5 : -5,
+                zIndex: isActive ? 10 : 1,
               }}
               transition={{ type: 'spring', stiffness: 260, damping: 28 }}
               onClick={() => {
